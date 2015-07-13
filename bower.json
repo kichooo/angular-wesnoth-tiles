@@ -1,0 +1,23 @@
+{
+  "name": "angular-wesnoth-tiles",
+  "version": "0.1.0",
+  "homepage": "https://github.com/kichooo/angular-wesnoth-tiles",
+  "authors": [
+    "Krzysztof Burliński <krzysztof.burlinski@gmail.com>"
+  ],
+  "description": "Angular directive, which gracefully handles communication and updates of wesnoth-tiles module.",
+  "main": "angular-wesnoth-tiles.js",
+  "keywords": [
+    "wesnoth",
+    "hex",
+    "game",
+    "hexagon",
+    "engine",
+    "directive",
+    "angular"
+  ],
+  "license": "GPL 2.0",
+  "devDependencies": {
+    "wesnoth-tiles": "~1.0.0"
+  }
+}
