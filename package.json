@@ -1,0 +1,27 @@
+{
+  "name": "angular-wesnoth-tiles",
+  "version": "0.0.0",
+  "description": "Directive for wesnoth tiles - hex drawing engine.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kichooo/angular-wesnoth-tiles"
+  },
+  "author": "",
+  "license": "GPL2",
+  "bugs": {
+    "url": "https://github.com/kichooo/angular-wesnoth-tiles/issues"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-copy": "0.0.2",
+    "gulp-notify": "^2.2.0",
+    "gulp-serve": "^1.0.0",
+    "gulp-typescript": "^2.7.8",
+    "merge2": "^0.3.6"
+  }
+}
