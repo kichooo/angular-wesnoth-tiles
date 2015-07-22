@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>map-wesnoth test.</title>
+    <style>
+    body {
+      background-color:black;
+      overflow: hidden;
+      position: absolute;
+      margin: 0px;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    .canvas-container {
+      position: absolute;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      top: 0px;
+    }
+
+    #map-canvas-left {
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+      top: 0px;
+      right: 50%;
+      /*z-index: 0;*/
+    }
+
+    #map-canvas-right {
+      position: absolute;
+      left: 50%;
+      bottom: 0px;
+      top: 0px;
+      right: 0px;
+      /*z-index: 0;*/
+    }
+
+    span {
+      font-size: 20px;      
+      padding: 10px;
+    }
+
+    span.white-text {
+      color: white;
+    }
+
+    #checksumBlock {
+      background-color: gray;
+      padding: 10px;
+    }
+
+    </style>
+    <script src="angular-wesnoth-tiles.js"></script>
+</head>
+
+<body ng-app="testApp">
+
+  <div class="canvas-container">
+    <canvas id="map-canvas-left">
+    </canvas>    
+    <canvas id="map-canvas-right">
+    </canvas>  
+  </div>
+
+
+
+<!--   <canvas id="map-canvas-right">
+  </canvas>
+ -->
+  <div style="position:absolute"> 
+    <span class="white-text">{{dupa}}</span>
+    <button ng-click="dupa=2">Click, dupo!</button>
+    <button type="button" onclick="loadDisk()">Load Disk</button>
+    <button type="button" onclick="loadTestMap()">Load Test Map</button>
+    <button type="button" onclick="loadRandomMap()">Load Random</button>
+    <button type="button" onclick="loadRandomMapWithWoods()">Load Woods</button>
+    <button type="button" onclick="loadSingleCircle()">Load circle</button>
+    <button type="button" onclick="benchmark()">Benchmark</button>
+    <br>
+    <br>
+    <div id = "checksumBlock">
+      <span>Checksum: </span><span id="checksum"></span><span id="expected"></span>
+      <br>
+      <span>Duration: </span><span id="duration"></span><span>ms</span>
+    </div>
+    
+  </div>
+
+  <script src="lib.js"></script>
+  <script src="bin/testApp.js"></script>
+</body>
+
+</html>

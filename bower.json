@@ -18,6 +18,9 @@
   ],
   "license": "GPL 2.0",
   "devDependencies": {
-    "wesnoth-tiles": "~1.0.0"
+    "wesnoth-tiles": "~1.0.3"
+  },
+  "dependencies": {
+    "angular": "~1.4.3"
   }
 }
