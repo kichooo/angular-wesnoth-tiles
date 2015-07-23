@@ -23,13 +23,12 @@
       top: 0px;
     }
 
-    #map-canvas-left {
+    wesnoth-tiles {
       position: absolute;
       left: 0px;
       bottom: 0px;
       top: 0px;
-      right: 50%;
-      /*z-index: 0;*/
+      right: 50%;      
     }
 
     #map-canvas-right {
@@ -56,14 +55,12 @@
     }
 
     </style>
-    <script src="angular-wesnoth-tiles.js"></script>
 </head>
 
 <body ng-app="testApp">
 
   <div class="canvas-container">
-    <canvas id="map-canvas-left">
-    </canvas>    
+    <wesnoth-tiles></wesnoth-tiles>  
     <canvas id="map-canvas-right">
     </canvas>  
   </div>
@@ -93,6 +90,7 @@
   </div>
 
   <script src="lib.js"></script>
+  <script src="angular-wesnoth-tiles.js"></script>
   <script src="bin/testApp.js"></script>
 </body>
 
