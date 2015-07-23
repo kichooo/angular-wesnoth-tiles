@@ -63,8 +63,8 @@ module WesnothTiles.Angular {
       requestAnimationFrame(timestamp => {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.map.redraw(this.ctx, this.projection, timestamp);
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(this.canvas.width / 2, this.canvas.height / 2, 32, 32);
+        // this.ctx.fillStyle = "red";
+        // this.ctx.fillRect(this.canvas.width / 2, this.canvas.height / 2, 3, 3);
         this.anim();
       })
       

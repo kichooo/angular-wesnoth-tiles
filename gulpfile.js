@@ -80,7 +80,7 @@ gulp.task('app', ['scripts'], function() {
 });
 
 gulp.task('watch', ['app'], function() {
-  gulp.watch(['test/src/app.ts', 'src/**/*.ts'], ['app']);
+  gulp.watch(['test/src/testApp.ts', 'angular-wesnoth-tiles.ts'], ['app']);
 });
 
 gulp.task('serve', serve({

@@ -31,15 +31,6 @@
       right: 50%;      
     }
 
-    #map-canvas-right {
-      position: absolute;
-      left: 50%;
-      bottom: 0px;
-      top: 0px;
-      right: 0px;
-      /*z-index: 0;*/
-    }
-
     span {
       font-size: 20px;      
       padding: 10px;
@@ -73,19 +64,8 @@
   <div style="position:absolute"> 
     <span class="white-text">{{dupa}}</span>
     <button ng-click="dupa=2">Click, dupo!</button>
-    <button type="button" onclick="loadDisk()">Load Disk</button>
-    <button type="button" onclick="loadTestMap()">Load Test Map</button>
-    <button type="button" onclick="loadRandomMap()">Load Random</button>
-    <button type="button" onclick="loadRandomMapWithWoods()">Load Woods</button>
-    <button type="button" onclick="loadSingleCircle()">Load circle</button>
-    <button type="button" onclick="benchmark()">Benchmark</button>
     <br>
     <br>
-    <div id = "checksumBlock">
-      <span>Checksum: </span><span id="checksum"></span><span id="expected"></span>
-      <br>
-      <span>Duration: </span><span id="duration"></span><span>ms</span>
-    </div>
     
   </div>
 
