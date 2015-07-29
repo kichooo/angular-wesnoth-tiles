@@ -23,7 +23,7 @@ gulp.task('lib', function() {
   return gulp.src(files)
     .pipe(jsFilter)
     .pipe(concat("lib.js"))
-    .pipe(gulp.dest("bin/"));
+    .pipe(gulp.dest("."));
 });
 
 gulp.task('scripts', ['lib'], function() {
@@ -36,7 +36,7 @@ gulp.task('scripts', ['lib'], function() {
     }));
 
   var jsStream = tsStreams.js
-    .pipe(gulp.dest("bin"))
+    .pipe(gulp.dest("."))
     .pipe(notify({
       "message": "Typescript built succesfully.",
       "onLast": true,
@@ -44,10 +44,7 @@ gulp.task('scripts', ['lib'], function() {
     }));
 
   var defStream = tsStreams.dts
-    .pipe(gulp.dest("bin"))
-    .pipe(copy("test/src/", {
-      prefix: 2
-    }));
+    .pipe(gulp.dest("."));
 
   return merge([jsStream, defStream])
     .on("error", notify.onError(function(error) {
@@ -67,7 +64,7 @@ gulp.task('install', function(callback) {
 });
 
 gulp.task('app', ['scripts'], function() {
-  var streams = gulp.src('test/testApp.ts')
+  var streams = gulp.src('test/src/testApp.ts')
     .pipe(ts({
       declarationFiles: false,
       target: "ES6",
@@ -84,7 +81,7 @@ gulp.task('watch', ['app'], function() {
 });
 
 gulp.task('serve', serve({
-  root: ['test', 'bin', 'bower_components/wesnoth-tiles/tiles'],
+  root: ['test', '.', 'bower_components/wesnoth-tiles/tiles'],
   port: 8002,
 }));
 

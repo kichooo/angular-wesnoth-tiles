@@ -9,7 +9,6 @@
 // });
 
 module WesnothTiles {
-  var dupa = "pies";
 
 }
 
@@ -19,7 +18,8 @@ wesnothTiles.directive("wesnothTiles", function () {
     return {
         template: "<canvas></canvas>",
         scope: {
-
+          model: "=",
+          onHexSelected: "&"
         },
         controller: WesnothTiles.Angular.Controller.$controllerId
     };
@@ -27,6 +27,16 @@ wesnothTiles.directive("wesnothTiles", function () {
 
 
 module WesnothTiles.Angular {
+  export interface IModel {
+    hexes: IHex[];
+  }
+
+  export interface IHex {
+    terrain: WesnothTiles.ETerrain;
+    overlay: WesnothTiles.EOverlay;
+    fog: boolean;
+  }
+
   export class Controller {
     static $controllerId = "WesnothAngularController"
     static $inject = ["$scope", "$element"];
