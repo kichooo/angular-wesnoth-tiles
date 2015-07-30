@@ -48,12 +48,10 @@
     </style>
 </head>
 
-<body ng-app="testApp">
+<body ng-app="testApp" ng-controller="TestController as ctrl">
 
   <div class="canvas-container">
-    <wesnoth-tiles></wesnoth-tiles>  
-    <canvas id="map-canvas-right">
-    </canvas>  
+    <wesnoth-tiles on-hex-clicked="ctrl.onHexClicked(hex)"></wesnoth-tiles>      
   </div>
 
 

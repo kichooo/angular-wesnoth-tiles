@@ -19,16 +19,44 @@ wesnothTiles.directive("wesnothTiles", function () {
         template: "<canvas></canvas>",
         scope: {
           model: "=",
-          onHexSelected: "&"
+          onHexClicked: "&"
         },
         controller: WesnothTiles.Angular.Controller.$controllerId
     };
 });
 
-
 module WesnothTiles.Angular {
+  export class HexMap {
+    rows = new Map<number, Map<number, IHex>>();
+
+    get(q: number, r: number): IHex {
+      var row = this.rows.get(q);
+      if (row == undefined)
+        return undefined;
+      return row.get(r);
+    }
+
+    set(q: number, r: number, hex: IHex): void {
+      var row = this.rows.get(q);
+      if (row == undefined) {
+        row = new Map<number, IHex>();
+        this.rows.set(q, row);
+      }
+      row.set(r, hex);
+    }
+
+    iterate(callback: (hex: IHex) => {}) {
+      this.rows.forEach(row => row.forEach(callback));
+    }
+  }
+
+  export interface IWesnothTilesScope extends ng.IScope {
+    onHexClicked(hex: IHex): void;
+    model: HexMap;
+  }
+
   export interface IModel {
-    hexes: IHex[];
+    hexes: HexMap;
   }
 
   export interface IHex {
@@ -45,7 +73,7 @@ module WesnothTiles.Angular {
     private ctx: CanvasRenderingContext2D;
     private map: WesnothTiles.TilesMap;
     private projection: WesnothTiles.IProjection;
-    constructor(private $scope: ng.IScope, element: JQuery) {
+    constructor(private $scope: IWesnothTilesScope, element: JQuery) {
       this.canvas = <HTMLCanvasElement>element.find("canvas")[0];
       this.ctx = this.canvas.getContext("2d");
 
@@ -66,6 +94,23 @@ module WesnothTiles.Angular {
 
         this.anim();
         this.loadDisk();
+
+        this.canvas.addEventListener('click', ev => {
+
+          var rect = this.canvas.getBoundingClientRect();
+          var x = ev.clientX - rect.left;
+          var y = ev.clientY - rect.top;
+
+          var pos = WesnothTiles.pointToHexPos(x - this.canvas.width / 2, y - this.canvas.height / 2);
+          
+          ev.preventDefault();
+          if ($scope.onHexClicked !== undefined) {
+            var hex = $scope.model.get(pos.q, pos.r);
+            if (hex !== undefined)
+              $scope.onHexClicked(hex);
+          }
+        });
+
       });
     }
 
