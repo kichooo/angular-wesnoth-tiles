@@ -51,7 +51,7 @@
 <body ng-app="testApp" ng-controller="TestController as ctrl">
 
   <div class="canvas-container">
-    <wesnoth-tiles on-hex-clicked="ctrl.onHexClicked(hex)"></wesnoth-tiles>      
+    <wesnoth-tiles model="model" on-hex-clicked="ctrl.onHexClicked(hex)"></wesnoth-tiles>      
   </div>
 
 
@@ -61,7 +61,7 @@
  -->
   <div style="position:absolute"> 
     <span class="white-text">{{dupa}}</span>
-    <button ng-click="dupa=2">Click, dupo!</button>
+    <button ng-click="ctrl.changeHex()">Click, dupo!</button>
     <br>
     <br>
     

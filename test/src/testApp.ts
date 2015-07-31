@@ -13,11 +13,15 @@ class TestContoller {
 
   constructor(private $scope: AppScope, $element: JQuery) {
     $scope.model = new WesnothTiles.Angular.HexMap();
-    
+    $scope.model.set({ q: 0, r: 1, terrain: WesnothTiles.ETerrain.GRASS_DRY, overlay: WesnothTiles.EOverlay.VILLAGE_HUMAN, fog: false});
   }
 
   onHexClicked(h: WesnothTiles.Angular.IHex) {
     console.log("clicked hex!", h);
+  }
+
+  changeHex() {
+    this.$scope.model.set({ q: 0, r: 0, terrain: WesnothTiles.ETerrain.GRASS_DRY, overlay: WesnothTiles.EOverlay.VILLAGE_HUMAN, fog: false}); 
   }
 }
 

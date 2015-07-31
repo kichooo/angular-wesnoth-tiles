@@ -27,6 +27,8 @@ wesnothTiles.directive("wesnothTiles", function () {
 
 module WesnothTiles.Angular {
   export class HexMap {
+    private $version = 0;
+
     rows = new Map<number, Map<number, IHex>>();
 
     get(q: number, r: number): IHex {
@@ -36,18 +38,26 @@ module WesnothTiles.Angular {
       return row.get(r);
     }
 
-    set(q: number, r: number, hex: IHex): void {
-      var row = this.rows.get(q);
+    set(hex: IHex): void {
+      var row = this.rows.get(hex.q);
       if (row == undefined) {
         row = new Map<number, IHex>();
-        this.rows.set(q, row);
+        this.rows.set(hex.q, row);
       }
-      row.set(r, hex);
+      row.set(hex.r, hex);
+      this.$version++;
     }
 
-    iterate(callback: (hex: IHex) => {}) {
+    iterate(callback: (hex: IHex) => void) {
       this.rows.forEach(row => row.forEach(callback));
     }
+
+    // This property helps change tracking - whenever hex is changed it gets bumped. 
+    // Thanks to it directive knows when to redraw.
+    get version(): number {
+      return this.$version;
+    }
+
   }
 
   export interface IWesnothTilesScope extends ng.IScope {
@@ -60,6 +70,8 @@ module WesnothTiles.Angular {
   }
 
   export interface IHex {
+    q: number;
+    r: number;
     terrain: WesnothTiles.ETerrain;
     overlay: WesnothTiles.EOverlay;
     fog: boolean;
@@ -73,6 +85,9 @@ module WesnothTiles.Angular {
     private ctx: CanvasRenderingContext2D;
     private map: WesnothTiles.TilesMap;
     private projection: WesnothTiles.IProjection;
+
+    private oldMap: HexMap;
+
     constructor(private $scope: IWesnothTilesScope, element: JQuery) {
       this.canvas = <HTMLCanvasElement>element.find("canvas")[0];
       this.ctx = this.canvas.getContext("2d");
@@ -93,7 +108,7 @@ module WesnothTiles.Angular {
         };
 
         this.anim();
-        this.loadDisk();
+        // this.loadDisk();
 
         this.canvas.addEventListener('click', ev => {
 
@@ -111,7 +126,41 @@ module WesnothTiles.Angular {
           }
         });
 
+        $scope.$watch("model.version", (newValue: number, oldValue: number) => {
+          console.log("Watch fired!");
+          if (newValue !== undefined && newValue > 0 && newValue !== oldValue) {            
+            this.rebuild();
+          }
+        })
+        this.rebuild();
       });
+    }
+
+    private rebuild() {
+      if (this.$scope.model.version === 0)
+        return;
+
+      // We need to find changes in the model.
+      var builder = this.map.getBuilder(this.oldMap === undefined);
+      
+      // This map will become the this.oldMap after this redraw.
+      var nextOldMap = new HexMap();
+
+      this.$scope.model.iterate(hex => {
+        if (this.oldMap !== undefined) {
+          var oldHex = this.oldMap.get(hex.q, hex.r);
+          if (oldHex !== undefined 
+            && oldHex === hex
+            && oldHex.terrain === hex.terrain 
+            && oldHex.overlay === hex.overlay
+            && oldHex.fog === hex.fog) {
+            return;
+          }
+        }
+        builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
+      });
+
+      builder.promise().then(() => this.map.rebuild());
     }
 
     private anim = () => {
