@@ -126,11 +126,8 @@ module WesnothTiles.Angular {
           }
         });
 
-        $scope.$watch("model.version", (newValue: number, oldValue: number) => {
-          console.log("Watch fired!");
-          if (newValue !== undefined && newValue > 0 && newValue !== oldValue) {            
-            this.rebuild();
-          }
+        $scope.$watch("model.version", () => {
+          this.rebuild();
         })
         this.rebuild();
       });
