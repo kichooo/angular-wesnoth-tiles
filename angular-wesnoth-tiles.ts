@@ -99,10 +99,10 @@ module WesnothTiles.Angular {
         this.canvas.height = this.canvas.parentElement.clientHeight;
 
         this.projection = {
-          left: -this.canvas.width / 2,
-          right: this.canvas.width / 2,
-          top: -this.canvas.height / 2,
-          bottom: this.canvas.height / 2,
+          left: Math.floor(-this.canvas.width / 2),
+          right: Math.floor(this.canvas.width / 2),
+          top: Math.floor(-this.canvas.height / 2),
+          bottom: Math.floor(this.canvas.height / 2),
           x: 0,
           y: 0,
         };
