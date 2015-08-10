@@ -61,7 +61,7 @@ module WesnothTiles.Angular {
   }
 
   export interface IWesnothTilesScope extends ng.IScope {
-    onHexClicked(hex: IHex): void;
+    onHexClicked(parasm: {hex: IHex}): void;
     model: HexMap;
   }
 
@@ -121,8 +121,11 @@ module WesnothTiles.Angular {
           ev.preventDefault();
           if ($scope.onHexClicked !== undefined) {
             var hex = $scope.model.get(pos.q, pos.r);
-            if (hex !== undefined)
-              $scope.onHexClicked(hex);
+            if (hex !== undefined) {
+              $scope.$apply(() => {
+                $scope.onHexClicked({ hex: hex });
+              });              
+            }
           }
         });
 

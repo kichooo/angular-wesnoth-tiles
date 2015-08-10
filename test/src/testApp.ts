@@ -19,8 +19,9 @@ class TestContoller {
     this.loadDisk();
   }
 
-  onHexClicked(h: WesnothTiles.Angular.IHex) {
-    console.log("clicked hex!", h);
+  onHexClicked = (h: WesnothTiles.Angular.IHex): void => {
+    this.$scope.model.set({ q: h.q, r: h.r, terrain: ETerrain.GRASS_DRY, overlay: EOverlay.DETRITUS, fog: true });
+    // console.log("clicked hex!", h);
   }
 
   changeHex() {
