@@ -88,52 +88,38 @@ module WesnothTiles.Angular {
       this.canvas = <HTMLCanvasElement>this.jQueryCanvas[0];
       this.ctx = this.canvas.getContext("2d");
 
-      WesnothTiles.createMap().then(map => {
-        this.map = map;
-
-        this.canvas.width = this.canvas.parentElement.clientWidth;
-        this.canvas.height = this.canvas.parentElement.clientHeight;
-
-        this.projection = {
-          left: Math.floor(-this.canvas.width / 2),
-          right: Math.floor(this.canvas.width / 2),
-          top: Math.floor(-this.canvas.height / 2),
-          bottom: Math.floor(this.canvas.height / 2),
-          x: 0,
-          y: 0,
-        };
-
-        this.anim();
-        // this.loadDisk();
-
-        this.canvas.addEventListener('click', ev => {
-
-          var rect = this.canvas.getBoundingClientRect();
-          var x = ev.clientX - rect.left;
-          var y = ev.clientY - rect.top;
-
-          var pos = WesnothTiles.pointToHexPos(x - this.canvas.width / 2, y - this.canvas.height / 2);
-
-          ev.preventDefault();
-          if ($scope.onHexClicked !== undefined) {
-            var hex = $scope.model.get(pos.q, pos.r);
-            if (hex !== undefined) {
-              $scope.$apply(() => {
-                $scope.onHexClicked({ hex: hex });
-              });
-            }
-          }
-        });
-
-        $scope.$watch("model.version",() => {
-          this.rebuild();
-        })
-
-        $scope.$watch("showCursor()", this.onShowCursorChange);
-        this.onShowCursorChange(this.$scope.showCursor());
-        this.rebuild();
-      });
+      WesnothTiles.createMap().then(this.init);
     }
+
+    private init = (map: WesnothTiles.TilesMap): void => {
+      this.map = map;
+
+      this.canvas.width = this.canvas.parentElement.clientWidth;
+      this.canvas.height = this.canvas.parentElement.clientHeight;
+
+      this.projection = {
+        left: Math.floor(-this.canvas.width / 2),
+        right: Math.floor(this.canvas.width / 2),
+        top: Math.floor(-this.canvas.height / 2),
+        bottom: Math.floor(this.canvas.height / 2),
+        x: 0,
+        y: 0,
+      };
+
+      this.anim();
+
+      this.jQueryCanvas.on("click", this.onMouseClick);
+
+      this.$scope.$watch("model.version",() => {
+        this.rebuild();
+      })
+
+      this.$scope.$watch("showCursor()", this.onShowCursorChange);
+
+      this.onShowCursorChange(this.$scope.showCursor());
+      this.rebuild();
+    }
+
 
     private rebuild() {
       if (this.$scope.model.version === 0)
@@ -169,6 +155,24 @@ module WesnothTiles.Angular {
         this.anim();
       })
 
+    }
+
+    private onMouseClick = (ev: MouseEvent) => {
+      var rect = this.canvas.getBoundingClientRect();
+      var x = ev.clientX - rect.left;
+      var y = ev.clientY - rect.top;
+
+      var pos = WesnothTiles.pointToHexPos(x - this.canvas.width / 2, y - this.canvas.height / 2);
+
+      ev.preventDefault();
+      if (this.$scope.onHexClicked !== undefined) {
+        var hex = this.$scope.model.get(pos.q, pos.r);
+        if (hex !== undefined) {
+          this.$scope.$apply(() => {
+            this.$scope.onHexClicked({ hex: hex });
+          });
+        }
+      }
     }
 
     private onMouseMove = (ev: MouseEvent) => {
