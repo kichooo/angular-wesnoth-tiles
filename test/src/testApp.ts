@@ -8,6 +8,7 @@ import EOverlay = WesnothTiles.EOverlay;
 
 interface AppScope extends ng.IScope {
   model: WesnothTiles.Angular.HexMap;
+  showCursor: boolean;
 }
 
 class TestContoller {
@@ -16,6 +17,7 @@ class TestContoller {
 
   constructor(private $scope: AppScope, $element: JQuery) {
     $scope.model = new WesnothTiles.Angular.HexMap();
+    $scope.showCursor = true;
     this.loadDisk();
   }
 

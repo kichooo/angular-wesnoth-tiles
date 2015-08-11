@@ -49,9 +49,8 @@
 </head>
 
 <body ng-app="testApp" ng-controller="TestController as ctrl">
-
   <div class="canvas-container">
-    <wesnoth-tiles model="model" show-cursor="true" on-hex-clicked="ctrl.onHexClicked(hex)"></wesnoth-tiles>      
+    <wesnoth-tiles model="model" show-cursor="showCursor" on-hex-clicked="ctrl.onHexClicked(hex)"></wesnoth-tiles>      
   </div>
 
 
@@ -61,9 +60,8 @@
  -->
   <div style="position:absolute"> 
     <span class="white-text">{{dupa}}</span>
-    <button ng-click="ctrl.changeHex()">Click, dupo!</button>
-    <br>
-    <br>
+    <button ng-click="ctrl.changeHex()">Change hex</button>
+    <button ng-click="showCursor = !showCursor">Toggle cursor</button>
     
   </div>
 
