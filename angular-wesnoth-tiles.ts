@@ -1,13 +1,6 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
 
-// app.directive('ngSparkline', function() {
-//   return {
-//     restrict: 'A',
-//     template: '<div class="sparkline"></div>'
-//   }
-// });
-
 module WesnothTiles {
 
 }
@@ -19,7 +12,8 @@ wesnothTiles.directive("wesnothTiles", function() {
     template: "<canvas></canvas>",
     scope: {
       model: "=",
-      onHexClicked: "&"
+      onHexClicked: "&",
+      showCursor: "&"
     },
     controller: WesnothTiles.Angular.Controller.$controllerId
   };
@@ -61,8 +55,9 @@ module WesnothTiles.Angular {
   }
 
   export interface IWesnothTilesScope extends ng.IScope {
-    onHexClicked(parasm: {hex: IHex}): void;
+    onHexClicked(parasm: { hex: IHex }): void;
     model: HexMap;
+    showCursor? (): boolean;
   }
 
   export interface IModel {
@@ -85,11 +80,12 @@ module WesnothTiles.Angular {
     private ctx: CanvasRenderingContext2D;
     private map: WesnothTiles.TilesMap;
     private projection: WesnothTiles.IProjection;
-
     private oldMap: HexMap;
+    private jQueryCanvas;
 
     constructor(private $scope: IWesnothTilesScope, element: JQuery) {
-      this.canvas = <HTMLCanvasElement>element.find("canvas")[0];
+      this.jQueryCanvas = element.find("canvas")
+      this.canvas = <HTMLCanvasElement>this.jQueryCanvas[0];
       this.ctx = this.canvas.getContext("2d");
 
       WesnothTiles.createMap().then(map => {
@@ -124,7 +120,7 @@ module WesnothTiles.Angular {
             if (hex !== undefined) {
               $scope.$apply(() => {
                 $scope.onHexClicked({ hex: hex });
-              });              
+              });
             }
           }
         });
@@ -132,6 +128,9 @@ module WesnothTiles.Angular {
         $scope.$watch("model.version",() => {
           this.rebuild();
         })
+
+        $scope.$watch("showCursor()", this.onShowCursorChange);
+        this.onShowCursorChange(this.$scope.showCursor());
         this.rebuild();
       });
     }
@@ -171,6 +170,32 @@ module WesnothTiles.Angular {
       })
 
     }
+
+    private onMouseMove = (ev: MouseEvent) => {
+      this.map.setCursorVisibility(true);
+      var rect = this.canvas.getBoundingClientRect();
+      var x = ev.clientX - rect.left - this.canvas.width / 2;
+      var y = ev.clientY - rect.top - this.canvas.height / 2;
+
+      this.map.moveCursor(x, y);
+    }
+
+    private onMouseLeave = (ev: MouseEvent) => {
+      this.map.setCursorVisibility(false);
+    }
+
+    private onShowCursorChange = (newVal: boolean): void => {
+      if (newVal === true) {
+        this.map.setCursorVisibility(true);
+        this.jQueryCanvas.on("mousemove", this.onMouseMove);
+        this.jQueryCanvas.on("mouseleave", this.onMouseLeave);
+      } else {
+        this.map.setCursorVisibility(false);
+        this.jQueryCanvas.off("mousemove");
+        this.jQueryCanvas.off("mouseleave");
+      }
+    }
+
   }
 }
 
