@@ -13,7 +13,8 @@ wesnothTiles.directive("wesnothTiles", function() {
     scope: {
       model: "=",
       onHexClicked: "&",
-      showCursor: "&"
+      showCursor: "&",
+      scrollable: "&"
     },
     controller: WesnothTiles.Angular.Controller.$controllerId
   };
@@ -22,7 +23,6 @@ wesnothTiles.directive("wesnothTiles", function() {
 module WesnothTiles.Angular {
   export class HexMap {
     private $version = 0;
-
     rows = new Map<number, Map<number, IHex>>();
 
     get(q: number, r: number): IHex {
@@ -57,7 +57,8 @@ module WesnothTiles.Angular {
   export interface IWesnothTilesScope extends ng.IScope {
     onHexClicked(parasm: { hex: IHex }): void;
     model: HexMap;
-    showCursor? (): boolean;
+    showCursor?(): boolean;
+    scrollable?(): boolean;
   }
 
   export interface IModel {
@@ -82,6 +83,7 @@ module WesnothTiles.Angular {
     private projection: WesnothTiles.IProjection;
     private oldMap: HexMap;
     private jQueryCanvas;
+    private action = EAction.NONE;
 
     constructor(private $scope: IWesnothTilesScope, element: JQuery) {
       this.jQueryCanvas = element.find("canvas")
@@ -108,15 +110,23 @@ module WesnothTiles.Angular {
 
       this.anim();
 
-      this.jQueryCanvas.on("click", this.onMouseClick);
+      // this.jQueryCanvas.on("click", this.onMouseClick);
 
       this.$scope.$watch("model.version",() => {
         this.rebuild();
       })
 
-      this.$scope.$watch("showCursor()", this.onShowCursorChange);
+      this.jQueryCanvas.on("mouseup", this.onMouseUp);
+      this.jQueryCanvas.on("mousemove", this.onMouseMove);
+      this.jQueryCanvas.on("mousedown", this.onMouseDown);
+      this.jQueryCanvas.on("mouseleave", this.onMouseLeave);
 
-      this.onShowCursorChange(this.$scope.showCursor());
+      // this.$scope.$watch("showCursor()", this.onShowCursorChange);
+      // this.onShowCursorChange(this.$scope.showCursor());
+
+      // this.$scope.$watch("scrollable()", this.onShowCursorChange);
+      // this.onScrollableChange(this.$scope.scrollable());
+
       this.rebuild();
     }
 
@@ -165,27 +175,55 @@ module WesnothTiles.Angular {
       var pos = WesnothTiles.pointToHexPos(x - this.canvas.width / 2, y - this.canvas.height / 2);
 
       ev.preventDefault();
-      if (this.$scope.onHexClicked !== undefined) {
-        var hex = this.$scope.model.get(pos.q, pos.r);
-        if (hex !== undefined) {
-          this.$scope.$apply(() => {
-            this.$scope.onHexClicked({ hex: hex });
-          });
-        }
+      var hex = this.$scope.model.get(pos.q, pos.r);
+      if (hex !== undefined) {
+        this.$scope.$apply(() => {
+          this.$scope.onHexClicked({ hex: hex });
+        });
       }
     }
 
     private onMouseMove = (ev: MouseEvent) => {
-      this.map.setCursorVisibility(true);
-      var rect = this.canvas.getBoundingClientRect();
-      var x = ev.clientX - rect.left - this.canvas.width / 2;
-      var y = ev.clientY - rect.top - this.canvas.height / 2;
+      if (this.action == EAction.NONE) {
+        if (this.$scope.showCursor()) {
+          this.map.setCursorVisibility(true);
+          var rect = this.canvas.getBoundingClientRect();
+          var x = ev.clientX - rect.left - this.canvas.width / 2;
+          var y = ev.clientY - rect.top - this.canvas.height / 2;
+          this.map.moveCursor(x, y);
+        }        
+      } else {
+        if (this.$scope.scrollable()) {
+          // scroll map  
+        }                
+      }
+      
+    }
 
-      this.map.moveCursor(x, y);
+    private onMouseUp = (ev: MouseEvent) => {
+      if (this.action === EAction.CLICK) {
+        if (angular.isFunction(this.$scope.onHexClicked)) {
+          this.onMouseClick(ev);
+          // handle click  
+        }
+        
+      }
+
+      this.action = EAction.NONE;
+    }
+
+    private onMouseDown = (ev: MouseEvent) => {
+      if (this.action != EAction.NONE)
+        return;
+      this.action = EAction.CLICK;
     }
 
     private onMouseLeave = (ev: MouseEvent) => {
       this.map.setCursorVisibility(false);
+    }
+
+    private onScrollableChange = (newVal: boolean): void => {
+
     }
 
     private onShowCursorChange = (newVal: boolean): void => {
@@ -201,6 +239,13 @@ module WesnothTiles.Angular {
     }
 
   }
+
+  enum EAction {
+    NONE,
+    SCROLL,
+    CLICK // click might also be a scroll.
+  }
+
 }
 
 wesnothTiles.controller(WesnothTiles.Angular.Controller.$controllerId, WesnothTiles.Angular.Controller)
