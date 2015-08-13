@@ -1,10 +1,6 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
 
-module WesnothTiles {
-
-}
-
 var wesnothTiles = angular.module("WesnothTiles", []);
 
 wesnothTiles.directive("wesnothTiles", function() {
@@ -143,16 +139,10 @@ module WesnothTiles.Angular {
       this.jQueryCanvas.on("mousedown", this.onMouseDown);
       this.jQueryCanvas.on("mouseleave", this.onMouseLeave);
 
-      // this.$scope.$watch("showCursor()", this.onShowCursorChange);
-      // this.onShowCursorChange(this.$scope.showCursor());
-
-      // this.$scope.$watch("scrollable()", this.onShowCursorChange);
-      // this.onScrollableChange(this.$scope.scrollable());
-
       this.rebuild();
     }
 
-
+    // Internal rebuild - tracks changes and orders a rebuild on underlying wesnoth-tiles library.
     private rebuild() {
       if (this.$scope.model.version === 0)
         return;
@@ -163,6 +153,7 @@ module WesnothTiles.Angular {
       // This map will become the this.oldMap after this redraw.
       var nextOldMap = new HexMap();
 
+      //  iterate all the tiles, but set only those that has changed.
       this.$scope.model.iterate(hex => {
         if (this.oldMap !== undefined) {
           var oldHex = this.oldMap.get(hex.q, hex.r);
@@ -180,6 +171,7 @@ module WesnothTiles.Angular {
       builder.promise().then(() => this.map.rebuild());
     }
 
+    // Animation frame - must be on repeat as there are animations.
     private anim = () => {
       requestAnimationFrame(timestamp => {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -261,6 +253,9 @@ module WesnothTiles.Angular {
     }
   }
 
+
+  // This enum is responsible for keeping track of current interaction status. 
+  // It might be expanded in the future to acomodate more features.
   enum EAction {
     NONE,
     SCROLL,
