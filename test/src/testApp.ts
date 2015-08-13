@@ -22,8 +22,7 @@ class TestContoller {
   }
 
   onHexClicked = (h: WesnothTiles.Angular.IHex): void => {
-    this.$scope.model.set({ q: h.q, r: h.r, terrain: ETerrain.GRASS_DRY, overlay: EOverlay.DETRITUS, fog: true });
-    // console.log("clicked hex!", h);
+    this.$scope.model.set({ q: h.q, r: h.r, terrain: ETerrain.GRASS_GREEN, overlay: EOverlay.DECIDUOUS_FALL, fog: false });
   }
 
   changeHex() {
@@ -146,6 +145,9 @@ class TestContoller {
       // mapBuilder = mapBuilder.setTile(-2 - i, 4 + 1, ETerrain.WATER_OCEAN)
       //   .setTile(-1 - i, 4, ETerrain.WATER_OCEAN);
     }
+
+    this.$scope.model.set({ q: 20, r: 0, terrain: ETerrain.GRASS_DRY, overlay: EOverlay.NONE, fog: false });
+
   }
 
   loadRing(radius, terrain): void {

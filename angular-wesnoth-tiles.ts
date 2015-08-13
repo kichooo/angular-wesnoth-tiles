@@ -34,12 +34,30 @@ module WesnothTiles.Angular {
 
     set(hex: IHex): void {
       var row = this.rows.get(hex.q);
-      if (row == undefined) {
+      if (row === undefined) {
         row = new Map<number, IHex>();
         this.rows.set(hex.q, row);
       }
       row.set(hex.r, hex);
+      this.setToVoidIfEmpty(hex.q + 1, hex.r);
+      this.setToVoidIfEmpty(hex.q - 1, hex.r);
+      this.setToVoidIfEmpty(hex.q, hex.r + 1);
+      this.setToVoidIfEmpty(hex.q, hex.r - 1);
+      this.setToVoidIfEmpty(hex.q + 1, hex.r - 1);
+      this.setToVoidIfEmpty(hex.q - 1, hex.r + 1);
       this.$version++;
+
+    }
+
+    private setToVoidIfEmpty(q: number, r: number) {
+      if (this.get(q, r) === undefined) {
+        var row = this.rows.get(q);
+        if (row === undefined) {
+          row = new Map<number, IHex>();
+          this.rows.set(q, row);
+        }
+        row.set(r, <IHex>{ q: q, r: r, terrain: ETerrain.VOID, overlay: EOverlay.NONE, fog: false });
+      }
     }
 
     iterate(callback: (hex: IHex) => void) {
@@ -57,8 +75,8 @@ module WesnothTiles.Angular {
   export interface IWesnothTilesScope extends ng.IScope {
     onHexClicked(parasm: { hex: IHex }): void;
     model: HexMap;
-    showCursor?(): boolean;
-    scrollable?(): boolean;
+    showCursor? (): boolean;
+    scrollable? (): boolean;
   }
 
   export interface IModel {
@@ -195,12 +213,12 @@ module WesnothTiles.Angular {
           var x = ev.clientX - rect.left + this.projection.left;
           var y = ev.clientY - rect.top + this.projection.top;
           this.map.moveCursor(x, y);
-        }        
+        }
       } else {
         if (this.$scope.scrollable()) {
           var rect = this.canvas.getBoundingClientRect();
           this.projection.left = this.actionStartX + this.dragStartX - ev.clientX;
-          this.projection.top = this.actionStartY + this.dragStartY - ev.clientY;          
+          this.projection.top = this.actionStartY + this.dragStartY - ev.clientY;
           this.projection.right = this.projection.left + this.canvas.width;
           this.projection.bottom = this.projection.top + this.canvas.height;
 
@@ -208,9 +226,9 @@ module WesnothTiles.Angular {
           if ((this.actionStartX - ev.clientX) * (this.actionStartX - ev.clientX) +
             (this.actionStartY - ev.clientY) * (this.actionStartY - ev.clientY) > 100)
             this.action = EAction.SCROLL;
-        }                
+        }
       }
-      
+
     }
 
     private onMouseUp = (ev: MouseEvent) => {
@@ -219,7 +237,7 @@ module WesnothTiles.Angular {
           this.onMouseClick(ev);
           // handle click  
         }
-        
+
       }
 
       this.action = EAction.NONE;
@@ -234,7 +252,7 @@ module WesnothTiles.Angular {
       this.dragStartX = this.projection.left;
       this.dragStartY = this.projection.top;
       this.actionStartX = ev.clientX;
-      this.actionStartY =  ev.clientY;
+      this.actionStartY = ev.clientY;
     }
 
     private onMouseLeave = (ev: MouseEvent) => {
