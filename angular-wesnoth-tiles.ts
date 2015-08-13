@@ -259,23 +259,6 @@ module WesnothTiles.Angular {
       this.map.setCursorVisibility(false);
       this.action = EAction.NONE;
     }
-
-    private onScrollableChange = (newVal: boolean): void => {
-
-    }
-
-    private onShowCursorChange = (newVal: boolean): void => {
-      if (newVal === true) {
-        this.map.setCursorVisibility(true);
-        this.jQueryCanvas.on("mousemove", this.onMouseMove);
-        this.jQueryCanvas.on("mouseleave", this.onMouseLeave);
-      } else {
-        this.map.setCursorVisibility(false);
-        this.jQueryCanvas.off("mousemove");
-        this.jQueryCanvas.off("mouseleave");
-      }
-    }
-
   }
 
   enum EAction {
