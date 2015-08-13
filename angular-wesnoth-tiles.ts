@@ -84,6 +84,10 @@ module WesnothTiles.Angular {
     private oldMap: HexMap;
     private jQueryCanvas;
     private action = EAction.NONE;
+    private dragStartX: number;
+    private dragStartY: number;
+    private actionStartX: number;
+    private actionStartY: number;
 
     constructor(private $scope: IWesnothTilesScope, element: JQuery) {
       this.jQueryCanvas = element.find("canvas")
@@ -172,7 +176,7 @@ module WesnothTiles.Angular {
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
 
-      var pos = WesnothTiles.pointToHexPos(x - this.canvas.width / 2, y - this.canvas.height / 2);
+      var pos = WesnothTiles.pointToHexPos(x + this.projection.left, y + this.projection.top);
 
       ev.preventDefault();
       var hex = this.$scope.model.get(pos.q, pos.r);
@@ -188,20 +192,29 @@ module WesnothTiles.Angular {
         if (this.$scope.showCursor()) {
           this.map.setCursorVisibility(true);
           var rect = this.canvas.getBoundingClientRect();
-          var x = ev.clientX - rect.left - this.canvas.width / 2;
-          var y = ev.clientY - rect.top - this.canvas.height / 2;
+          var x = ev.clientX - rect.left + this.projection.left;
+          var y = ev.clientY - rect.top + this.projection.top;
           this.map.moveCursor(x, y);
         }        
       } else {
         if (this.$scope.scrollable()) {
-          // scroll map  
+          var rect = this.canvas.getBoundingClientRect();
+          this.projection.left = this.actionStartX + this.dragStartX - ev.clientX;
+          this.projection.top = this.actionStartY + this.dragStartY - ev.clientY;          
+          this.projection.right = this.projection.left + this.canvas.width;
+          this.projection.bottom = this.projection.top + this.canvas.height;
+
+          // check if still a click...
+          if ((this.actionStartX - ev.clientX) * (this.actionStartX - ev.clientX) +
+            (this.actionStartY - ev.clientY) * (this.actionStartY - ev.clientY) > 100)
+            this.action = EAction.SCROLL;
         }                
       }
       
     }
 
     private onMouseUp = (ev: MouseEvent) => {
-      if (this.action === EAction.CLICK) {
+      if (this.action === EAction.CLICK && this.action !== EAction.SCROLL) {
         if (angular.isFunction(this.$scope.onHexClicked)) {
           this.onMouseClick(ev);
           // handle click  
@@ -216,10 +229,17 @@ module WesnothTiles.Angular {
       if (this.action != EAction.NONE)
         return;
       this.action = EAction.CLICK;
+
+      var rect = this.canvas.getBoundingClientRect();
+      this.dragStartX = this.projection.left;
+      this.dragStartY = this.projection.top;
+      this.actionStartX = ev.clientX;
+      this.actionStartY =  ev.clientY;
     }
 
     private onMouseLeave = (ev: MouseEvent) => {
       this.map.setCursorVisibility(false);
+      this.action = EAction.NONE;
     }
 
     private onScrollableChange = (newVal: boolean): void => {
