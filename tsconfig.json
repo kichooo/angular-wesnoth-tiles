@@ -2,7 +2,7 @@
   "compilerOptions": {
     "out": "built/mycode.js",
     "sourceMap": true,
-    "target": "es6"
+    "target": "es6"z
   },
   "files": [
     "test/src/app.ts"

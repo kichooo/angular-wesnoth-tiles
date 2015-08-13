@@ -11,6 +11,7 @@ var gulp = require('gulp'),
   gulpFilter = require('gulp-filter'),
   util = require('gulp-util'),
   tsd = require('gulp-tsd');
+  typescript = require('typescript')
 
 
 gulp.task('lib', function() {
@@ -32,7 +33,8 @@ gulp.task('scripts', ['lib'], function() {
       // noImplicitAny: true,
       declarationFiles: true,
       target: "ES6",
-      out: 'angular-wesnoth-tiles.js'
+      out: 'angular-wesnoth-tiles.js',
+      typescript: typescript
     }));
 
   var jsStream = tsStreams.js
@@ -68,7 +70,8 @@ gulp.task('app', ['scripts'], function() {
     .pipe(ts({
       declarationFiles: false,
       target: "ES6",
-      out: 'testApp.js'
+      out: 'testApp.js',
+      typescript: typescript
     }));
 
   var jsStream = streams.js
