@@ -519,6 +519,25 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/home/kich/.config/sublime-text-3/Packages/ArcticTypescript/README.md",
+			"settings":
+			{
+				"buffer_size": 13718,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "{\n  \"name\": \"angular-wesnoth-tiles\",\n  \"version\": \"0.1.2\",\n  \"homepage\": \"https://github.com/kichooo/angular-wesnoth-tiles\",\n  \"authors\": [\n    \"Krzysztof Burliński <krzysztof.burlinski@gmail.com>\"\n  ],\n  \"description\": \"Angular directive, which gracefully handles communication and updates of wesnoth-tiles module.\",\n  \"main\": \"angular-wesnoth-tiles.js\",\n  \"keywords\": [\n    \"wesnoth\",\n    \"hex\",\n    \"game\",\n    \"hexagon\",\n    \"engine\",\n    \"directive\",\n    \"angular\"\n  ],\n  \"license\": \"GPL 2.0\",\n  \"devDependencies\": {\n    \"wesnoth-tiles\": \"~1.1.4\"\n  },\n  \"dependencies\": {\n    \"angular\": \"~1.4.3\"\n  },\n  \"main\": [\n    \"angular-wesnoth-files.js\"\n  ],\n  \"ignore\": [\n    \"**/.*\",\n    \"test\",\n    \".gitignore\",\n    \"gulpfile.js\",\n    \"package.json\",\n    \"tsconfig.json\",\n    \"tsfmt.json\",\n    \"project_files\"\n  ]\n}",
+			"file": "bower.json",
+			"file_size": 827,
+			"file_write_time": 130881911952575271,
+			"settings":
+			{
+				"buffer_size": 814,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -731,6 +750,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"1",
 			"promi",
 			"prom",
 			"Promise",
@@ -857,8 +877,7 @@
 			"argsStruct",
 			"message",
 			"t",
-			"typ",
-			"log"
+			"typ"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -881,8 +900,66 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/home/kich/.config/sublime-text-3/Packages/ArcticTypescript/README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13718,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								348,
+								348
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "bower.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 814,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								808,
+								789
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 143.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],

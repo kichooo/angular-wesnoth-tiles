@@ -34,7 +34,7 @@
     "package.json",
     "tsconfig.json",
     "tsfmt.json",
-    "data",
-    "project_files"
+    "project_files",
+    "lib.js"
   ]
 }
