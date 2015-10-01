@@ -17,6 +17,8 @@ wesnothTiles.directive("wesnothTiles", function() {
 });
 
 module WesnothTiles.Angular {
+
+  // Class - model of the map. It contains functions to ease
   export class HexMap {
     private $version = 0;
     rows = new Map<number, Map<number, IHex>>();
