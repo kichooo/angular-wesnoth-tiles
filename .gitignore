@@ -2,7 +2,4 @@ bower_components
 node_modules
 typings
 test/bin
-
-angular-wesnoth-tiles.d.ts
-angular-wesnoth-tiles.js
 lib.js
