@@ -1,12 +1,11 @@
 {
   "name": "angular-wesnoth-tiles",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "homepage": "https://github.com/kichooo/angular-wesnoth-tiles",
   "authors": [
     "Krzysztof Burliński <krzysztof.burlinski@gmail.com>"
   ],
   "description": "Angular directive, which gracefully handles communication and updates of wesnoth-tiles module.",
-  "main": "angular-wesnoth-tiles.js",
   "keywords": [
     "wesnoth",
     "hex",
@@ -22,7 +21,8 @@
     "wesnoth-tiles": "~1.1.4"
   },
   "main": [
-    "angular-wesnoth-files.js"
+    "angular-wesnoth-files.js",
+    "angular-wesnoth-files.d.ts"
   ],
   "ignore": [
     "**/.*",
