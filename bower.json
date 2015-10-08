@@ -1,6 +1,6 @@
 {
   "name": "angular-wesnoth-tiles",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/kichooo/angular-wesnoth-tiles",
   "authors": [
     "Krzysztof Burliński <krzysztof.burlinski@gmail.com>"
@@ -21,8 +21,8 @@
     "wesnoth-tiles": "~1.1.4"
   },
   "main": [
-    "angular-wesnoth-files.js",
-    "angular-wesnoth-files.d.ts"
+    "angular-wesnoth-tiles.js",
+    "angular-wesnoth-tiles.d.ts"
   ],
   "ignore": [
     "test",
