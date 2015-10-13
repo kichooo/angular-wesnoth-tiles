@@ -1,5 +1,3 @@
-/// <reference path="typings/tsd.d.ts" />
-/// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts" />
 declare var wesnothTiles: ng.IModule;
 declare module WesnothTiles.Angular {
     class HexMap {
