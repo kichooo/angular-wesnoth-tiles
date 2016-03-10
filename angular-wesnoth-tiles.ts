@@ -1,7 +1,7 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
 
-var wesnothTiles = angular.module("WesnothTiles", []);
+const wesnothTiles = angular.module("WesnothTiles", []);
 
 wesnothTiles.directive("wesnothTiles", function() {
   return {
@@ -24,14 +24,12 @@ module WesnothTiles.Angular {
     rows = new Map<number, Map<number, IHex>>();
 
     get(q: number, r: number): IHex {
-      var row = this.rows.get(q);
-      if (row == undefined)
-        return undefined;
-      return row.get(r);
+      const row = this.rows.get(q);
+      return row ? row.get(r) : undefined;
     }
 
     set(hex: IHex): void {
-      var row = this.rows.get(hex.q);
+      let row = this.rows.get(hex.q);
       if (row === undefined) {
         row = new Map<number, IHex>();
         this.rows.set(hex.q, row);
@@ -49,7 +47,7 @@ module WesnothTiles.Angular {
 
     private setToVoidIfEmpty(q: number, r: number) {
       if (this.get(q, r) === undefined) {
-        var row = this.rows.get(q);
+        let row = this.rows.get(q);
         if (row === undefined) {
           row = new Map<number, IHex>();
           this.rows.set(q, row);
@@ -132,9 +130,7 @@ module WesnothTiles.Angular {
 
       // this.jQueryCanvas.on("click", this.onMouseClick);
 
-      this.$scope.$watch("model.version",() => {
-        this.rebuild();
-      })
+      this.$scope.$watch("model.version",() => this.rebuild())
 
       this.jQueryCanvas.on("mouseup", this.onMouseUp);
       this.jQueryCanvas.on("mousemove", this.onMouseMove);
@@ -150,15 +146,15 @@ module WesnothTiles.Angular {
         return;
 
       // We need to find changes in the model.
-      var builder = this.map.getBuilder(this.oldMap === undefined);
+      const builder = this.map.getBuilder(this.oldMap === undefined);
       
       // This map will become the this.oldMap after this redraw.
-      var nextOldMap = new HexMap();
+      const nextOldMap = new HexMap();
 
       //  iterate all the tiles, but set only those that has changed.
       this.$scope.model.iterate(hex => {
         if (this.oldMap !== undefined) {
-          var oldHex = this.oldMap.get(hex.q, hex.r);
+          const oldHex = this.oldMap.get(hex.q, hex.r);
           if (oldHex !== undefined
             && oldHex === hex
             && oldHex.terrain === hex.terrain
@@ -184,14 +180,14 @@ module WesnothTiles.Angular {
     }
 
     private onMouseClick = (ev: MouseEvent) => {
-      var rect = this.canvas.getBoundingClientRect();
-      var x = ev.clientX - rect.left;
-      var y = ev.clientY - rect.top;
+      const rect = this.canvas.getBoundingClientRect();
+      const x = ev.clientX - rect.left;
+      const y = ev.clientY - rect.top;
 
-      var pos = WesnothTiles.pointToHexPos(x + this.projection.left, y + this.projection.top);
+      const pos = WesnothTiles.pointToHexPos(x + this.projection.left, y + this.projection.top);
 
       ev.preventDefault();
-      var hex = this.$scope.model.get(pos.q, pos.r);
+      const hex = this.$scope.model.get(pos.q, pos.r);
       if (hex !== undefined) {
         this.$scope.$apply(() => {
           this.$scope.onHexClicked({ hex: hex });
@@ -203,14 +199,14 @@ module WesnothTiles.Angular {
       if (this.action == EAction.NONE) {
         if (this.$scope.showCursor()) {
           this.map.setCursorVisibility(true);
-          var rect = this.canvas.getBoundingClientRect();
-          var x = ev.clientX - rect.left + this.projection.left;
-          var y = ev.clientY - rect.top + this.projection.top;
+          const rect = this.canvas.getBoundingClientRect();
+          const x = ev.clientX - rect.left + this.projection.left;
+          const y = ev.clientY - rect.top + this.projection.top;
           this.map.moveCursor(x, y);
         }
       } else {
         if (this.$scope.scrollable()) {
-          var rect = this.canvas.getBoundingClientRect();
+          const rect = this.canvas.getBoundingClientRect();
           this.projection.left = this.actionStartX + this.dragStartX - ev.clientX;
           this.projection.top = this.actionStartY + this.dragStartY - ev.clientY;
           this.projection.right = this.projection.left + this.canvas.width;
@@ -242,7 +238,7 @@ module WesnothTiles.Angular {
         return;
       this.action = EAction.CLICK;
 
-      var rect = this.canvas.getBoundingClientRect();
+      const rect = this.canvas.getBoundingClientRect();
       this.dragStartX = this.projection.left;
       this.dragStartY = this.projection.top;
       this.actionStartX = ev.clientX;

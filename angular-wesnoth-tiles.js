@@ -1,6 +1,6 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
-var wesnothTiles = angular.module("WesnothTiles", []);
+const wesnothTiles = angular.module("WesnothTiles", []);
 wesnothTiles.directive("wesnothTiles", function () {
     return {
         template: "<canvas></canvas>",
@@ -24,13 +24,11 @@ var WesnothTiles;
                 this.rows = new Map();
             }
             HexMap.prototype.get = function (q, r) {
-                var row = this.rows.get(q);
-                if (row == undefined)
-                    return undefined;
-                return row.get(r);
+                const row = this.rows.get(q);
+                return row ? row.get(r) : undefined;
             };
             HexMap.prototype.set = function (hex) {
-                var row = this.rows.get(hex.q);
+                let row = this.rows.get(hex.q);
                 if (row === undefined) {
                     row = new Map();
                     this.rows.set(hex.q, row);
@@ -46,7 +44,7 @@ var WesnothTiles;
             };
             HexMap.prototype.setToVoidIfEmpty = function (q, r) {
                 if (this.get(q, r) === undefined) {
-                    var row = this.rows.get(q);
+                    let row = this.rows.get(q);
                     if (row === undefined) {
                         row = new Map();
                         this.rows.set(q, row);
@@ -88,9 +86,7 @@ var WesnothTiles;
                     };
                     _this.anim();
                     // this.jQueryCanvas.on("click", this.onMouseClick);
-                    _this.$scope.$watch("model.version", function () {
-                        _this.rebuild();
-                    });
+                    _this.$scope.$watch("model.version", function () { return _this.rebuild(); });
                     _this.jQueryCanvas.on("mouseup", _this.onMouseUp);
                     _this.jQueryCanvas.on("mousemove", _this.onMouseMove);
                     _this.jQueryCanvas.on("mousedown", _this.onMouseDown);
@@ -106,12 +102,12 @@ var WesnothTiles;
                     });
                 };
                 this.onMouseClick = function (ev) {
-                    var rect = _this.canvas.getBoundingClientRect();
-                    var x = ev.clientX - rect.left;
-                    var y = ev.clientY - rect.top;
-                    var pos = WesnothTiles.pointToHexPos(x + _this.projection.left, y + _this.projection.top);
+                    const rect = _this.canvas.getBoundingClientRect();
+                    const x = ev.clientX - rect.left;
+                    const y = ev.clientY - rect.top;
+                    const pos = WesnothTiles.pointToHexPos(x + _this.projection.left, y + _this.projection.top);
                     ev.preventDefault();
-                    var hex = _this.$scope.model.get(pos.q, pos.r);
+                    const hex = _this.$scope.model.get(pos.q, pos.r);
                     if (hex !== undefined) {
                         _this.$scope.$apply(function () {
                             _this.$scope.onHexClicked({ hex: hex });
@@ -122,15 +118,15 @@ var WesnothTiles;
                     if (_this.action == 0 /* NONE */) {
                         if (_this.$scope.showCursor()) {
                             _this.map.setCursorVisibility(true);
-                            var rect = _this.canvas.getBoundingClientRect();
-                            var x = ev.clientX - rect.left + _this.projection.left;
-                            var y = ev.clientY - rect.top + _this.projection.top;
+                            const rect = _this.canvas.getBoundingClientRect();
+                            const x = ev.clientX - rect.left + _this.projection.left;
+                            const y = ev.clientY - rect.top + _this.projection.top;
                             _this.map.moveCursor(x, y);
                         }
                     }
                     else {
                         if (_this.$scope.scrollable()) {
-                            var rect = _this.canvas.getBoundingClientRect();
+                            const rect = _this.canvas.getBoundingClientRect();
                             _this.projection.left = _this.actionStartX + _this.dragStartX - ev.clientX;
                             _this.projection.top = _this.actionStartY + _this.dragStartY - ev.clientY;
                             _this.projection.right = _this.projection.left + _this.canvas.width;
@@ -153,7 +149,7 @@ var WesnothTiles;
                     if (_this.action != 0 /* NONE */)
                         return;
                     _this.action = 2 /* CLICK */;
-                    var rect = _this.canvas.getBoundingClientRect();
+                    const rect = _this.canvas.getBoundingClientRect();
                     _this.dragStartX = _this.projection.left;
                     _this.dragStartY = _this.projection.top;
                     _this.actionStartX = ev.clientX;
@@ -174,13 +170,13 @@ var WesnothTiles;
                 if (this.$scope.model.version === 0)
                     return;
                 // We need to find changes in the model.
-                var builder = this.map.getBuilder(this.oldMap === undefined);
+                const builder = this.map.getBuilder(this.oldMap === undefined);
                 // This map will become the this.oldMap after this redraw.
-                var nextOldMap = new HexMap();
+                const nextOldMap = new HexMap();
                 //  iterate all the tiles, but set only those that has changed.
                 this.$scope.model.iterate(function (hex) {
                     if (_this.oldMap !== undefined) {
-                        var oldHex = _this.oldMap.get(hex.q, hex.r);
+                        const oldHex = _this.oldMap.get(hex.q, hex.r);
                         if (oldHex !== undefined && oldHex === hex && oldHex.terrain === hex.terrain && oldHex.overlay === hex.overlay && oldHex.fog === hex.fog) {
                             return;
                         }

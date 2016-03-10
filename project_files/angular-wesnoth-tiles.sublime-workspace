@@ -520,21 +520,10 @@
 	"buffers":
 	[
 		{
-			"file": "/home/kich/.config/sublime-text-3/Packages/ArcticTypescript/README.md",
+			"file": "/home/kich/workspace/angular-wesnoth-tiles/test/index.html",
 			"settings":
 			{
-				"buffer_size": 13718,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "{\n  \"name\": \"angular-wesnoth-tiles\",\n  \"version\": \"0.1.2\",\n  \"homepage\": \"https://github.com/kichooo/angular-wesnoth-tiles\",\n  \"authors\": [\n    \"Krzysztof Burliński <krzysztof.burlinski@gmail.com>\"\n  ],\n  \"description\": \"Angular directive, which gracefully handles communication and updates of wesnoth-tiles module.\",\n  \"main\": \"angular-wesnoth-tiles.js\",\n  \"keywords\": [\n    \"wesnoth\",\n    \"hex\",\n    \"game\",\n    \"hexagon\",\n    \"engine\",\n    \"directive\",\n    \"angular\"\n  ],\n  \"license\": \"GPL 2.0\",\n  \"devDependencies\": {\n    \"wesnoth-tiles\": \"~1.1.4\"\n  },\n  \"dependencies\": {\n    \"angular\": \"~1.4.3\"\n  },\n  \"main\": [\n    \"angular-wesnoth-files.js\"\n  ],\n  \"ignore\": [\n    \"**/.*\",\n    \"test\",\n    \".gitignore\",\n    \"gulpfile.js\",\n    \"package.json\",\n    \"tsconfig.json\",\n    \"tsfmt.json\",\n    \"project_files\"\n  ]\n}",
-			"file": "bower.json",
-			"file_size": 827,
-			"file_write_time": 130881911952575271,
-			"settings":
-			{
-				"buffer_size": 814,
+				"buffer_size": 1442,
 				"line_ending": "Unix"
 			}
 		}
@@ -546,8 +535,8 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 75.0,
-		"last_filter": "",
+		"height": 96.0,
+		"last_filter": "Package Control: insta",
 		"selected_items":
 		[
 			[
@@ -600,10 +589,15 @@
 	},
 	"expanded_folders":
 	[
-		"/home/kich/workspace/angular-wesnoth-tiles"
+		"/home/kich/workspace/angular-wesnoth-tiles",
+		"/home/kich/workspace/angular-wesnoth-tiles/test",
+		"/home/kich/workspace/angular-wesnoth-tiles/test/bin",
+		"/home/kich/workspace/angular-wesnoth-tiles/test/src"
 	],
 	"file_history":
 	[
+		"/home/kich/workspace/angular-wesnoth-tiles/project_files/bower.json",
+		"/home/kich/.config/sublime-text-3/Packages/ArcticTypescript/README.md",
 		"/home/kich/workspace/game-of-dukes/backend/gulpfile.js",
 		"/home/kich/workspace/game-of-dukes/backend/server.js",
 		"/home/kich/workspace/game-of-dukes/web/src/pregen/Objects.ts",
@@ -729,13 +723,11 @@
 		"/home/kich/workspace/Go/src/bitbucket.org/omg_scout/game-of-dukes-backend/gameserver/game_db/improvements.go",
 		"/home/kich/workspace/Go/src/bitbucket.org/omg_scout/game-of-dukes-backend/gameserver/connection/ws.go",
 		"/home/kich/workspace/Go/src/bitbucket.org/omg_scout/game-of-dukes-backend/gameserver/db/prefixes.go",
-		"/home/kich/workspace/Go/src/bitbucket.org/omg_scout/game-of-dukes-backend/gameserver/connection/authWs.go",
-		"/home/kich/workspace/Go/src/bitbucket.org/omg_scout/game-of-dukes-backend/gameserver/gameserver.go",
-		"/home/kich/workspace/Go/src/bitbucket.org/omg_scout/game-of-dukes-backend/gameserver/game_db/login.go"
+		"/home/kich/workspace/Go/src/bitbucket.org/omg_scout/game-of-dukes-backend/gameserver/connection/authWs.go"
 	],
 	"find":
 	{
-		"height": 30.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -750,6 +742,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"hexmap",
+			"\n    ",
 			"1",
 			"promi",
 			"prom",
@@ -875,9 +869,7 @@
 			"calc",
 			"error",
 			"argsStruct",
-			"message",
-			"t",
-			"typ"
+			"message"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -900,61 +892,40 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/home/kich/.config/sublime-text-3/Packages/ArcticTypescript/README.md",
-					"semi_transient": false,
+					"file": "/home/kich/workspace/angular-wesnoth-tiles/test/index.html",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 13718,
+						"buffer_size": 1442,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								348,
-								348
+								1246,
+								1246
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Markdown/Markdown.tmLanguage"
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"typescript_plugin_format_options":
+							{
+								"convertTabsToSpaces": true,
+								"indentSize": 2,
+								"tabSize": 2
+							}
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "bower.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 814,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								808,
-								789
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 143.0,
+						"translation.y": 745.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
