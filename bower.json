@@ -1,6 +1,6 @@
 {
   "name": "angular-wesnoth-tiles",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/kichooo/angular-wesnoth-tiles",
   "authors": [
     "Krzysztof Burliński <krzysztof.burlinski@gmail.com>"
@@ -17,7 +17,7 @@
   ],
   "license": "GPL 2.0",
   "dependencies": {
-    "angular": "~1.4.3",
+    "angular": "~1.4",
     "wesnoth-tiles": "~1.2.0"
   },
   "main": [
