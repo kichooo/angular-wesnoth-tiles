@@ -1,7 +1,8 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
-const wesnothTiles = angular.module("WesnothTiles", []);
-wesnothTiles.directive("wesnothTiles", function () {
+const wesnothTiles = angular.module("WesnothTiles", []).constant("WesnothTiles.config", {
+    path: ""
+}).directive("wesnothTiles", function () {
     return {
         template: "<canvas></canvas>",
         scope: {
@@ -68,7 +69,7 @@ var WesnothTiles;
         })();
         Angular.HexMap = HexMap;
         var Controller = (function () {
-            function Controller($scope, element) {
+            function Controller($scope, element, $config) {
                 var _this = this;
                 this.$scope = $scope;
                 this.action = 0 /* NONE */;
@@ -162,6 +163,7 @@ var WesnothTiles;
                 this.jQueryCanvas = element.find("canvas");
                 this.canvas = this.jQueryCanvas[0];
                 this.ctx = this.canvas.getContext("2d");
+                WesnothTiles.init($config);
                 WesnothTiles.createMap().then(this.init);
             }
             // Internal rebuild - tracks changes and orders a rebuild on underlying wesnoth-tiles library.
@@ -186,7 +188,7 @@ var WesnothTiles;
                 builder.promise().then(function () { return _this.map.rebuild(); });
             };
             Controller.$controllerId = "WesnothAngularController";
-            Controller.$inject = ["$scope", "$element"];
+            Controller.$inject = ["$scope", "$element", "WesnothTiles.config"];
             return Controller;
         })();
         Angular.Controller = Controller;

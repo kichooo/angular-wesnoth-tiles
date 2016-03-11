@@ -11,7 +11,7 @@ var gulp = require('gulp'),
   gulpFilter = require('gulp-filter'),
   util = require('gulp-util'),
   tsd = require('gulp-tsd');
-  typescript = require('typescript')
+typescript = require('typescript')
 
 
 gulp.task('lib', function() {
@@ -84,7 +84,7 @@ gulp.task('watch', ['app'], function() {
 });
 
 gulp.task('serve', serve({
-  root: ['test', '.', 'bower_components/wesnoth-tiles/tiles'],
+  root: ['test', '.'],
   port: 8002,
 }));
 

@@ -1,20 +1,22 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
 
-const wesnothTiles = angular.module("WesnothTiles", []);
-
-wesnothTiles.directive("wesnothTiles", function() {
-  return {
-    template: "<canvas></canvas>",
-    scope: {
-      model: "=",
-      onHexClicked: "&",
-      showCursor: "&",
-      scrollable: "&"
-    },
-    controller: WesnothTiles.Angular.Controller.$controllerId
-  };
-});
+const wesnothTiles = angular.module("WesnothTiles", [])
+  .constant("WesnothTiles.config", {
+    path: ""
+  })
+  .directive("wesnothTiles", function() {
+    return {
+      template: "<canvas></canvas>",
+      scope: {
+        model: "=",
+        onHexClicked: "&",
+        showCursor: "&",
+        scrollable: "&"
+      },
+      controller: WesnothTiles.Angular.Controller.$controllerId
+    }
+  });
 
 module WesnothTiles.Angular {
 
@@ -89,7 +91,7 @@ module WesnothTiles.Angular {
 
   export class Controller {
     static $controllerId = "WesnothAngularController"
-    static $inject = ["$scope", "$element"];
+    static $inject = ["$scope", "$element", "WesnothTiles.config"];
 
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -103,11 +105,11 @@ module WesnothTiles.Angular {
     private actionStartX: number;
     private actionStartY: number;
 
-    constructor(private $scope: IWesnothTilesScope, element: JQuery) {
+    constructor(private $scope: IWesnothTilesScope, element: JQuery, $config: WesnothTiles.IConfig) {
       this.jQueryCanvas = element.find("canvas")
       this.canvas = <HTMLCanvasElement>this.jQueryCanvas[0];
       this.ctx = this.canvas.getContext("2d");
-
+      WesnothTiles.init($config);
       WesnothTiles.createMap().then(this.init);
     }
 

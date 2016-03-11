@@ -1,7 +1,10 @@
 /// <reference path="../../angular-wesnoth-tiles.d.ts"/>
 /// <reference path="../../typings/tsd.d.ts"/>
 // / <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
-var app = angular.module("testApp", ["WesnothTiles"]);
+var app = angular.module("testApp", ["WesnothTiles"])
+  .constant("WesnothTiles.config", {
+    path: "bower_components/wesnoth-tiles/tiles/"
+  });
 
 import ETerrain = WesnothTiles.ETerrain;
 import EOverlay = WesnothTiles.EOverlay;
@@ -22,7 +25,7 @@ class TestContoller {
   }
 
   onHexClicked = (h: WesnothTiles.Angular.IHex): void => {
-    this.$scope.model.set({ q: h.q, r: h.r, terrain: ETerrain.GRASS_GREEN, overlay: EOverlay.DECIDUOUS_FALL, fog: false });
+    this.$scope.model.set({ q: h.q, r: h.r, terrain: ETerrain.GRASS_GREEN, overlay: EOverlay.VILLAGE_ELVEN, fog: false });
   }
 
   changeHex() {

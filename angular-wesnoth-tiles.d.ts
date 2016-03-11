@@ -44,7 +44,7 @@ declare module WesnothTiles.Angular {
         private dragStartY;
         private actionStartX;
         private actionStartY;
-        constructor($scope: IWesnothTilesScope, element: JQuery);
+        constructor($scope: IWesnothTilesScope, element: JQuery, $config: WesnothTiles.IConfig);
         private init;
         private rebuild();
         private anim;
