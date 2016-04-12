@@ -9,7 +9,9 @@ const wesnothTiles = angular.module("WesnothTiles", []).constant("WesnothTiles.c
             model: "=",
             onHexClicked: "&",
             showCursor: "&",
-            scrollable: "&"
+            scrollable: "&",
+            onPreDraw: "&",
+            onPostDraw: "&",
         },
         controller: WesnothTiles.Angular.Controller.$controllerId
     };
@@ -98,7 +100,9 @@ var WesnothTiles;
                 this.anim = function () {
                     requestAnimationFrame(function (timestamp) {
                         _this.ctx.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
+                        _this.$scope.onPreDraw({ ctx: _this.ctx });
                         _this.map.redraw(_this.ctx, _this.projection, timestamp);
+                        _this.$scope.onPostDraw({ ctx: _this.ctx });
                         _this.anim();
                     });
                 };
@@ -164,7 +168,8 @@ var WesnothTiles;
                 this.canvas = this.jQueryCanvas[0];
                 this.ctx = this.canvas.getContext("2d");
                 WesnothTiles.init($config);
-                WesnothTiles.createMap().then(this.init);
+                WesnothTiles.createMap().then(this.init).then(function () {
+                });
             }
             // Internal rebuild - tracks changes and orders a rebuild on underlying wesnoth-tiles library.
             Controller.prototype.rebuild = function () {

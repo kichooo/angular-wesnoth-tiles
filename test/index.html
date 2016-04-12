@@ -50,7 +50,7 @@
 
 <body ng-app="testApp" ng-controller="TestController as ctrl">
   <div class="canvas-container">
-    <wesnoth-tiles model="model" show-cursor="showCursor" scrollable="true" on-hex-clicked="ctrl.onHexClicked(hex)"></wesnoth-tiles>      
+    <wesnoth-tiles model="model" show-cursor="showCursor" scrollable="true" on-hex-clicked="ctrl.onHexClicked(hex)" on-post-draw="ctrl.onPostDraw(ctx)"></wesnoth-tiles>
   </div>
 
 

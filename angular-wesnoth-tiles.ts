@@ -73,9 +73,9 @@ module WesnothTiles.Angular {
   }
 
   export interface IWesnothTilesScope extends ng.IScope {
-    onHexClicked(parasm: { hex: IHex }): void;
-    onPreDraw(canvas: CanvasRenderingContext2D);
-    onPostDraw(canvas: CanvasRenderingContext2D);
+    onHexClicked(params: { hex: IHex }): void;
+    onPreDraw(params: {ctx: CanvasRenderingContext2D}): void;
+    onPostDraw(params: {ctx: CanvasRenderingContext2D}): void;
     model: HexMap;
     showCursor? (): boolean;
     scrollable? (): boolean;
@@ -156,7 +156,6 @@ module WesnothTiles.Angular {
       
       // This map will become the this.oldMap after this redraw.
       const nextOldMap = new HexMap();
-
       //  iterate all the tiles, but set only those that has changed.
       this.$scope.model.iterate(hex => {
         if (this.oldMap !== undefined) {
@@ -171,7 +170,6 @@ module WesnothTiles.Angular {
         }
         builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
       });
-
       builder.promise().then(() => this.map.rebuild());
     }
 
@@ -179,9 +177,12 @@ module WesnothTiles.Angular {
     private anim = () => {
       requestAnimationFrame(timestamp => {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.scope.onPreDraw(ctx);
+        this.$scope.onPreDraw({ctx: this.ctx})
+
         this.map.redraw(this.ctx, this.projection, timestamp);
-        this.scope.onPostDraw(ctx);
+
+        this.$scope.onPostDraw({ctx: this.ctx})
+
         this.anim();
       })
 

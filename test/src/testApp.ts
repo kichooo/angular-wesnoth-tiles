@@ -28,6 +28,11 @@ class TestContoller {
     this.$scope.model.set({ q: h.q, r: h.r, terrain: ETerrain.GRASS_GREEN, overlay: EOverlay.VILLAGE_ELVEN, fog: false });
   }
 
+  onPostDraw = (ctx: CanvasRenderingContext2D): void => {
+    ctx.fillStyle="#FF0000";
+    ctx.fillRect(256,256,64,64);
+  }
+
   changeHex() {
     this.$scope.model.set({ q: 0, r: 0, terrain: ETerrain.GRASS_DRY, overlay: EOverlay.VILLAGE_HUMAN, fog: false });
   }

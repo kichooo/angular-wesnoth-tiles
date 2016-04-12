@@ -12,8 +12,14 @@ declare module WesnothTiles.Angular {
         version: number;
     }
     interface IWesnothTilesScope extends ng.IScope {
-        onHexClicked(parasm: {
+        onHexClicked(params: {
             hex: IHex;
+        }): void;
+        onPreDraw(params: {
+            ctx: CanvasRenderingContext2D;
+        }): void;
+        onPostDraw(params: {
+            ctx: CanvasRenderingContext2D;
         }): void;
         model: HexMap;
         showCursor?(): boolean;
