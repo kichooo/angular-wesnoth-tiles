@@ -12,7 +12,9 @@ const wesnothTiles = angular.module("WesnothTiles", [])
         model: "=",
         onHexClicked: "&",
         showCursor: "&",
-        scrollable: "&"
+        scrollable: "&",
+        onPreDraw: "&",
+        onPostDraw: "&",
       },
       controller: WesnothTiles.Angular.Controller.$controllerId
     }
@@ -72,6 +74,8 @@ module WesnothTiles.Angular {
 
   export interface IWesnothTilesScope extends ng.IScope {
     onHexClicked(parasm: { hex: IHex }): void;
+    onPreDraw(canvas: CanvasRenderingContext2D);
+    onPostDraw(canvas: CanvasRenderingContext2D);
     model: HexMap;
     showCursor? (): boolean;
     scrollable? (): boolean;
@@ -110,7 +114,7 @@ module WesnothTiles.Angular {
       this.canvas = <HTMLCanvasElement>this.jQueryCanvas[0];
       this.ctx = this.canvas.getContext("2d");
       WesnothTiles.init($config);
-      WesnothTiles.createMap().then(this.init);
+      WesnothTiles.createMap().then(this.init).then(() => {});
     }
 
     private init = (map: WesnothTiles.TilesMap): void => {
@@ -175,7 +179,9 @@ module WesnothTiles.Angular {
     private anim = () => {
       requestAnimationFrame(timestamp => {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.scope.onPreDraw(ctx);
         this.map.redraw(this.ctx, this.projection, timestamp);
+        this.scope.onPostDraw(ctx);
         this.anim();
       })
 
