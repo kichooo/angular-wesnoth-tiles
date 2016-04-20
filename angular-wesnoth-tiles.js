@@ -67,6 +67,17 @@ var WesnothTiles;
                 enumerable: true,
                 configurable: true
             });
+            HexMap.prototype.clone = function () {
+                const hexMap = new HexMap();
+                this.rows.forEach(function (row, q) {
+                    const newRow = new Map();
+                    hexMap.rows.set(q, newRow);
+                    row.forEach(function (h, r) {
+                        newRow.set(r, angular.copy(h));
+                    });
+                });
+                return hexMap;
+            };
             return HexMap;
         })();
         Angular.HexMap = HexMap;
@@ -178,18 +189,17 @@ var WesnothTiles;
                     return;
                 // We need to find changes in the model.
                 const builder = this.map.getBuilder(this.oldMap === undefined);
-                // This map will become the this.oldMap after this redraw.
-                const nextOldMap = new HexMap();
                 //  iterate all the tiles, but set only those that has changed.
                 this.$scope.model.iterate(function (hex) {
                     if (_this.oldMap !== undefined) {
                         const oldHex = _this.oldMap.get(hex.q, hex.r);
-                        if (oldHex !== undefined && oldHex === hex && oldHex.terrain === hex.terrain && oldHex.overlay === hex.overlay && oldHex.fog === hex.fog) {
+                        if (oldHex !== undefined && oldHex.terrain === hex.terrain && oldHex.overlay === hex.overlay && oldHex.fog === hex.fog) {
                             return;
                         }
                     }
                     builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
                 });
+                this.oldMap = this.$scope.model.clone();
                 builder.promise().then(function () { return _this.map.rebuild(); });
             };
             Controller.$controllerId = "WesnothAngularController";

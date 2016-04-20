@@ -10,6 +10,7 @@ declare module WesnothTiles.Angular {
         private setToVoidIfEmpty(q, r);
         iterate(callback: (hex: IHex) => void): void;
         version: number;
+        clone(): HexMap;
     }
     interface IWesnothTilesScope extends ng.IScope {
         onHexClicked(params: {

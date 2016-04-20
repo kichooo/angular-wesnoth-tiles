@@ -70,6 +70,18 @@ module WesnothTiles.Angular {
       return this.$version;
     }
 
+    clone(): HexMap {
+      const hexMap = new HexMap();
+      this.rows.forEach((row, q) => {
+        const newRow = new Map<number, IHex>();
+        hexMap.rows.set(q, newRow);
+        row.forEach((h, r) => {
+          newRow.set(r, angular.copy(h));
+        });
+      })
+      return hexMap;
+    }
+
   }
 
   export interface IWesnothTilesScope extends ng.IScope {
@@ -154,14 +166,11 @@ module WesnothTiles.Angular {
       // We need to find changes in the model.
       const builder = this.map.getBuilder(this.oldMap === undefined);
       
-      // This map will become the this.oldMap after this redraw.
-      const nextOldMap = new HexMap();
       //  iterate all the tiles, but set only those that has changed.
       this.$scope.model.iterate(hex => {
         if (this.oldMap !== undefined) {
           const oldHex = this.oldMap.get(hex.q, hex.r);
           if (oldHex !== undefined
-            && oldHex === hex
             && oldHex.terrain === hex.terrain
             && oldHex.overlay === hex.overlay
             && oldHex.fog === hex.fog) {
@@ -170,6 +179,9 @@ module WesnothTiles.Angular {
         }
         builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
       });
+
+      this.oldMap = this.$scope.model.clone();
+
       builder.promise().then(() => this.map.rebuild());
     }
 
