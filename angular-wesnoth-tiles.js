@@ -1,36 +1,36 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
-const wesnothTiles = angular.module("WesnothTiles", []).constant("WesnothTiles.config", {
+const wesnothTiles = angular.module("WesnothTiles", [])
+    .constant("$config", {
     path: ""
-}).directive("wesnothTiles", function () {
-    return {
-        template: "<canvas></canvas>",
-        scope: {
-            model: "=",
-            onHexClicked: "&",
-            showCursor: "&",
-            scrollable: "&",
-            onPreDraw: "&",
-            onPostDraw: "&",
-        },
-        controller: WesnothTiles.Angular.Controller.$controllerId
-    };
-});
+})
+    .directive("wesnothTiles", () => ({
+    template: "<canvas></canvas>",
+    scope: {
+        model: "=",
+        onHexClicked: "&",
+        showCursor: "&",
+        scrollable: "&",
+        onPreDraw: "&",
+        onPostDraw: "&",
+    },
+    controller: ($scope, $element, $config) => new WesnothTiles.Angular.Controller($scope, $element, $config)
+}));
 var WesnothTiles;
 (function (WesnothTiles) {
     var Angular;
     (function (Angular) {
         // Class - model of the map. It contains functions to ease
-        var HexMap = (function () {
-            function HexMap() {
+        class HexMap {
+            constructor() {
                 this.$version = 0;
                 this.rows = new Map();
             }
-            HexMap.prototype.get = function (q, r) {
+            get(q, r) {
                 const row = this.rows.get(q);
                 return row ? row.get(r) : undefined;
-            };
-            HexMap.prototype.set = function (hex) {
+            }
+            set(hex) {
                 let row = this.rows.get(hex.q);
                 if (row === undefined) {
                     row = new Map();
@@ -44,169 +44,162 @@ var WesnothTiles;
                 this.setToVoidIfEmpty(hex.q + 1, hex.r - 1);
                 this.setToVoidIfEmpty(hex.q - 1, hex.r + 1);
                 this.$version++;
-            };
-            HexMap.prototype.setToVoidIfEmpty = function (q, r) {
+            }
+            setToVoidIfEmpty(q, r) {
                 if (this.get(q, r) === undefined) {
                     let row = this.rows.get(q);
                     if (row === undefined) {
                         row = new Map();
                         this.rows.set(q, row);
                     }
-                    row.set(r, { q: q, r: r, terrain: 21 /* VOID */, overlay: 62 /* NONE */, fog: false });
+                    row.set(r, { q: q, r: r, terrain: WesnothTiles.ETerrain.VOID, overlay: WesnothTiles.EOverlay.NONE, fog: false });
                 }
-            };
-            HexMap.prototype.iterate = function (callback) {
-                this.rows.forEach(function (row) { return row.forEach(callback); });
-            };
-            Object.defineProperty(HexMap.prototype, "version", {
-                // This property helps change tracking - whenever hex is changed it gets bumped. 
-                // Thanks to it directive knows when to redraw.
-                get: function () {
-                    return this.$version;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            HexMap.prototype.clone = function () {
+            }
+            iterate(callback) {
+                this.rows.forEach(row => row.forEach(callback));
+            }
+            // This property helps change tracking - whenever hex is changed it gets bumped. 
+            // Thanks to it directive knows when to redraw.
+            get version() {
+                return this.$version;
+            }
+            clone() {
                 const hexMap = new HexMap();
-                this.rows.forEach(function (row, q) {
+                this.rows.forEach((row, q) => {
                     const newRow = new Map();
                     hexMap.rows.set(q, newRow);
-                    row.forEach(function (h, r) {
+                    row.forEach((h, r) => {
                         newRow.set(r, angular.copy(h));
                     });
                 });
                 return hexMap;
-            };
-            return HexMap;
-        })();
+            }
+        }
         Angular.HexMap = HexMap;
-        var Controller = (function () {
-            function Controller($scope, element, $config) {
-                var _this = this;
+        class Controller {
+            constructor($scope, element, $config) {
                 this.$scope = $scope;
-                this.action = 0 /* NONE */;
-                this.init = function (map) {
-                    _this.map = map;
-                    _this.canvas.width = _this.canvas.parentElement.clientWidth;
-                    _this.canvas.height = _this.canvas.parentElement.clientHeight;
-                    _this.projection = {
-                        left: Math.floor(-_this.canvas.width / 2),
-                        right: Math.floor(_this.canvas.width / 2),
-                        top: Math.floor(-_this.canvas.height / 2),
-                        bottom: Math.floor(_this.canvas.height / 2),
+                this.action = EAction.NONE;
+                this.init = (map) => {
+                    this.map = map;
+                    this.canvas.width = this.canvas.parentElement.clientWidth;
+                    this.canvas.height = this.canvas.parentElement.clientHeight;
+                    this.projection = {
+                        left: Math.floor(-this.canvas.width / 2),
+                        right: Math.floor(this.canvas.width / 2),
+                        top: Math.floor(-this.canvas.height / 2),
+                        bottom: Math.floor(this.canvas.height / 2),
                         x: 0,
                         y: 0,
                     };
-                    _this.anim();
+                    this.anim();
                     // this.jQueryCanvas.on("click", this.onMouseClick);
-                    _this.$scope.$watch("model.version", function () { return _this.rebuild(); });
-                    _this.jQueryCanvas.on("mouseup", _this.onMouseUp);
-                    _this.jQueryCanvas.on("mousemove", _this.onMouseMove);
-                    _this.jQueryCanvas.on("mousedown", _this.onMouseDown);
-                    _this.jQueryCanvas.on("mouseleave", _this.onMouseLeave);
-                    _this.rebuild();
+                    this.$scope.$watch("model.version", () => this.rebuild());
+                    this.jQueryCanvas.on("mouseup", this.onMouseUp);
+                    this.jQueryCanvas.on("mousemove", this.onMouseMove);
+                    this.jQueryCanvas.on("mousedown", this.onMouseDown);
+                    this.jQueryCanvas.on("mouseleave", this.onMouseLeave);
+                    this.rebuild();
                 };
                 // Animation frame - must be on repeat as there are animations.
-                this.anim = function () {
-                    requestAnimationFrame(function (timestamp) {
-                        _this.ctx.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
-                        _this.$scope.onPreDraw({ ctx: _this.ctx });
-                        _this.map.redraw(_this.ctx, _this.projection, timestamp);
-                        _this.$scope.onPostDraw({ ctx: _this.ctx });
-                        _this.anim();
+                this.anim = () => {
+                    requestAnimationFrame(timestamp => {
+                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                        this.$scope.onPreDraw({ ctx: this.ctx });
+                        this.map.redraw(this.ctx, this.projection, timestamp);
+                        this.$scope.onPostDraw({ ctx: this.ctx });
+                        this.anim();
                     });
                 };
-                this.onMouseClick = function (ev) {
-                    const rect = _this.canvas.getBoundingClientRect();
+                this.onMouseClick = (ev) => {
+                    const rect = this.canvas.getBoundingClientRect();
                     const x = ev.clientX - rect.left;
                     const y = ev.clientY - rect.top;
-                    const pos = WesnothTiles.pointToHexPos(x + _this.projection.left, y + _this.projection.top);
+                    const pos = WesnothTiles.pointToHexPos(x + this.projection.left, y + this.projection.top);
                     ev.preventDefault();
-                    const hex = _this.$scope.model.get(pos.q, pos.r);
+                    const hex = this.$scope.model.get(pos.q, pos.r);
                     if (hex !== undefined) {
-                        _this.$scope.$apply(function () {
-                            _this.$scope.onHexClicked({ hex: hex });
+                        this.$scope.$apply(() => {
+                            this.$scope.onHexClicked({ hex: hex });
                         });
                     }
                 };
-                this.onMouseMove = function (ev) {
-                    if (_this.action == 0 /* NONE */) {
-                        if (_this.$scope.showCursor()) {
-                            _this.map.setCursorVisibility(true);
-                            const rect = _this.canvas.getBoundingClientRect();
-                            const x = ev.clientX - rect.left + _this.projection.left;
-                            const y = ev.clientY - rect.top + _this.projection.top;
-                            _this.map.moveCursor(x, y);
+                this.onMouseMove = (ev) => {
+                    if (this.action == EAction.NONE) {
+                        if (this.$scope.showCursor()) {
+                            this.map.setCursorVisibility(true);
+                            const rect = this.canvas.getBoundingClientRect();
+                            const x = ev.clientX - rect.left + this.projection.left;
+                            const y = ev.clientY - rect.top + this.projection.top;
+                            this.map.moveCursor(x, y);
                         }
                     }
                     else {
-                        if (_this.$scope.scrollable()) {
-                            const rect = _this.canvas.getBoundingClientRect();
-                            _this.projection.left = _this.actionStartX + _this.dragStartX - ev.clientX;
-                            _this.projection.top = _this.actionStartY + _this.dragStartY - ev.clientY;
-                            _this.projection.right = _this.projection.left + _this.canvas.width;
-                            _this.projection.bottom = _this.projection.top + _this.canvas.height;
+                        if (this.$scope.scrollable()) {
+                            const rect = this.canvas.getBoundingClientRect();
+                            this.projection.left = this.actionStartX + this.dragStartX - ev.clientX;
+                            this.projection.top = this.actionStartY + this.dragStartY - ev.clientY;
+                            this.projection.right = this.projection.left + this.canvas.width;
+                            this.projection.bottom = this.projection.top + this.canvas.height;
                             // check if still a click...
-                            if ((_this.actionStartX - ev.clientX) * (_this.actionStartX - ev.clientX) + (_this.actionStartY - ev.clientY) * (_this.actionStartY - ev.clientY) > 100)
-                                _this.action = 1 /* SCROLL */;
+                            if ((this.actionStartX - ev.clientX) * (this.actionStartX - ev.clientX) +
+                                (this.actionStartY - ev.clientY) * (this.actionStartY - ev.clientY) > 100)
+                                this.action = EAction.SCROLL;
                         }
                     }
                 };
-                this.onMouseUp = function (ev) {
-                    if (_this.action === 2 /* CLICK */ && _this.action !== 1 /* SCROLL */) {
-                        if (angular.isFunction(_this.$scope.onHexClicked)) {
-                            _this.onMouseClick(ev);
+                this.onMouseUp = (ev) => {
+                    if (this.action === EAction.CLICK && this.action !== EAction.SCROLL) {
+                        if (angular.isFunction(this.$scope.onHexClicked)) {
+                            this.onMouseClick(ev);
                         }
                     }
-                    _this.action = 0 /* NONE */;
+                    this.action = EAction.NONE;
                 };
-                this.onMouseDown = function (ev) {
-                    if (_this.action != 0 /* NONE */)
+                this.onMouseDown = (ev) => {
+                    if (this.action != EAction.NONE)
                         return;
-                    _this.action = 2 /* CLICK */;
-                    const rect = _this.canvas.getBoundingClientRect();
-                    _this.dragStartX = _this.projection.left;
-                    _this.dragStartY = _this.projection.top;
-                    _this.actionStartX = ev.clientX;
-                    _this.actionStartY = ev.clientY;
+                    this.action = EAction.CLICK;
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.dragStartX = this.projection.left;
+                    this.dragStartY = this.projection.top;
+                    this.actionStartX = ev.clientX;
+                    this.actionStartY = ev.clientY;
                 };
-                this.onMouseLeave = function (ev) {
-                    _this.map.setCursorVisibility(false);
-                    _this.action = 0 /* NONE */;
+                this.onMouseLeave = (ev) => {
+                    this.map.setCursorVisibility(false);
+                    this.action = EAction.NONE;
                 };
                 this.jQueryCanvas = element.find("canvas");
                 this.canvas = this.jQueryCanvas[0];
                 this.ctx = this.canvas.getContext("2d");
                 WesnothTiles.init($config);
-                WesnothTiles.createMap().then(this.init).then(function () {
-                });
+                WesnothTiles.createMap().then(this.init).then(() => { });
             }
             // Internal rebuild - tracks changes and orders a rebuild on underlying wesnoth-tiles library.
-            Controller.prototype.rebuild = function () {
-                var _this = this;
+            rebuild() {
                 if (this.$scope.model.version === 0)
                     return;
                 // We need to find changes in the model.
                 const builder = this.map.getBuilder(this.oldMap === undefined);
                 //  iterate all the tiles, but set only those that has changed.
-                this.$scope.model.iterate(function (hex) {
-                    if (_this.oldMap !== undefined) {
-                        const oldHex = _this.oldMap.get(hex.q, hex.r);
-                        if (oldHex !== undefined && oldHex.terrain === hex.terrain && oldHex.overlay === hex.overlay && oldHex.fog === hex.fog) {
+                this.$scope.model.iterate(hex => {
+                    if (this.oldMap !== undefined) {
+                        const oldHex = this.oldMap.get(hex.q, hex.r);
+                        if (oldHex !== undefined
+                            && oldHex.terrain === hex.terrain
+                            && oldHex.overlay === hex.overlay
+                            && oldHex.fog === hex.fog) {
                             return;
                         }
                     }
-                    console.log("Changing tile", _this.oldMap);
                     builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
                 });
                 this.oldMap = this.$scope.model.clone();
-                builder.promise().then(function () { return _this.map.rebuild(); });
-            };
-            Controller.$controllerId = "WesnothAngularController";
-            Controller.$inject = ["$scope", "$element", "WesnothTiles.config"];
-            return Controller;
-        })();
+                builder.promise().then(() => this.map.rebuild());
+            }
+        }
+        Controller.$inject = ["$scope", "$element", "WesnothTiles.config"];
         Angular.Controller = Controller;
         // This enum is responsible for keeping track of current interaction status. 
         // It might be expanded in the future to acomodate more features.
@@ -218,4 +211,3 @@ var WesnothTiles;
         })(EAction || (EAction = {}));
     })(Angular = WesnothTiles.Angular || (WesnothTiles.Angular = {}));
 })(WesnothTiles || (WesnothTiles = {}));
-wesnothTiles.controller(WesnothTiles.Angular.Controller.$controllerId, WesnothTiles.Angular.Controller);

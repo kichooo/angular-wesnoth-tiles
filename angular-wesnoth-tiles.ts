@@ -2,23 +2,21 @@
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
 
 const wesnothTiles = angular.module("WesnothTiles", [])
-  .constant("WesnothTiles.config", {
+  .constant("$config", {
     path: ""
   })
-  .directive("wesnothTiles", function() {
-    return {
-      template: "<canvas></canvas>",
-      scope: {
-        model: "=",
-        onHexClicked: "&",
-        showCursor: "&",
-        scrollable: "&",
-        onPreDraw: "&",
-        onPostDraw: "&",
-      },
-      controller: WesnothTiles.Angular.Controller.$controllerId
-    }
-  });
+  .directive("wesnothTiles", () => ({
+    template: "<canvas></canvas>",
+    scope: {
+      model: "=",
+      onHexClicked: "&",
+      showCursor: "&",
+      scrollable: "&",
+      onPreDraw: "&",
+      onPostDraw: "&",
+    },
+    controller: ($scope, $element, $config) => new WesnothTiles.Angular.Controller($scope, $element, $config)
+  }));
 
 module WesnothTiles.Angular {
 
@@ -106,7 +104,6 @@ module WesnothTiles.Angular {
   }
 
   export class Controller {
-    static $controllerId = "WesnothAngularController"
     static $inject = ["$scope", "$element", "WesnothTiles.config"];
 
     private canvas: HTMLCanvasElement;
@@ -177,7 +174,6 @@ module WesnothTiles.Angular {
             return;
           }
         }
-        console.log("Changing tile", this.oldMap);
         builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
       });
 
@@ -283,5 +279,3 @@ module WesnothTiles.Angular {
   }
 
 }
-
-wesnothTiles.controller(WesnothTiles.Angular.Controller.$controllerId, WesnothTiles.Angular.Controller)

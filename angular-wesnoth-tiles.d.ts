@@ -38,7 +38,6 @@ declare module WesnothTiles.Angular {
     }
     class Controller {
         private $scope;
-        static $controllerId: string;
         static $inject: string[];
         private canvas;
         private ctx;

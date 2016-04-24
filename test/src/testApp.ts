@@ -2,7 +2,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 // / <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
 var app = angular.module("testApp", ["WesnothTiles"])
-  .constant("WesnothTiles.config", {
+  .constant("$config", {
     path: "bower_components/wesnoth-tiles/tiles/"
   });
 
@@ -16,9 +16,9 @@ interface AppScope extends ng.IScope {
 
 class TestContoller {
   static $controllerId = "TestController"
-  static $inject = ["$scope", "$element"];
+  static $inject = ["$scope"];
 
-  constructor(private $scope: AppScope, $element: JQuery) {
+  constructor(private $scope: AppScope) {
     $scope.model = new WesnothTiles.Angular.HexMap();
     $scope.showCursor = true;
     this.loadDisk();
@@ -207,4 +207,4 @@ class TestContoller {
 
 }
 
-app.controller(TestContoller.$controllerId, TestContoller);
+app.controller(TestContoller.$controllerId, $scope => new TestContoller($scope));
