@@ -1,7 +1,7 @@
 /// <reference path="typings/tsd.d.ts"/>
 /// <reference path="bower_components/wesnoth-tiles/bin/wesnoth-tiles.d.ts"/>
 const wesnothTiles = angular.module("WesnothTiles", [])
-    .constant("$config", {
+    .constant("WesnothTilesConfig", {
     path: ""
 })
     .directive("wesnothTiles", () => ({
@@ -14,7 +14,7 @@ const wesnothTiles = angular.module("WesnothTiles", [])
         onPreDraw: "&",
         onPostDraw: "&",
     },
-    controller: ($scope, $element, $config) => new WesnothTiles.Angular.Controller($scope, $element, $config)
+    controller: ($scope, $element, WesnothTilesConfig) => new WesnothTiles.Angular.Controller($scope, $element, WesnothTilesConfig)
 }));
 var WesnothTiles;
 (function (WesnothTiles) {
