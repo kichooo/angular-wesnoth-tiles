@@ -177,6 +177,7 @@ module WesnothTiles.Angular {
             return;
           }
         }
+        console.log("Changing tile", this.oldMap);
         builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
       });
 

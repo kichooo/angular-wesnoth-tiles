@@ -197,6 +197,7 @@ var WesnothTiles;
                             return;
                         }
                     }
+                    console.log("Changing tile", _this.oldMap);
                     builder.setTile(hex.q, hex.r, hex.terrain, hex.overlay, hex.fog);
                 });
                 this.oldMap = this.$scope.model.clone();
